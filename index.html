@@ -491,6 +491,15 @@ body.dark .add-btn { color: #0b0d12; }
 .ssr-props { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
 .ssr-prop { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--color-background-secondary); color: var(--color-text-secondary); }
 
+
+.map-grid{display:grid;grid-template-columns:repeat(5,minmax(48px,1fr));gap:6px;margin:10px 0;}
+.map-cell{aspect-ratio:1;border-radius:8px;border:1px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;background:var(--color-background-primary)}
+.map-cell.active{border-color:var(--amber);background:var(--amber-bg)}
+.map-legend{font-size:12px;color:var(--color-text-secondary);margin-top:8px;}
+.audio-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.audio-btn{padding:7px 12px;border-radius:20px;border:1px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);cursor:pointer;}
+.audio-btn.active{background:var(--amber);color:#111;border-color:transparent;}
+@media (max-width:700px){.race-grid,.class-grid,.monster-grid,.skill-list,.ability-grid,.map-grid{grid-template-columns:1fr 1fr;} .tabs{position:sticky;top:0;background:var(--color-background-primary);z-index:10;padding-top:8px;}}
 /* ===== THEME TOGGLE ===== */
 .theme-toggle {
   position: fixed; top: 16px; right: 16px;
@@ -531,6 +540,8 @@ body.dark .add-btn { color: #0b0d12; }
     <button class="tab-btn" data-tab="inventory">🎒 Инвентарь</button>
     <button class="tab-btn" data-tab="bestiary">🐲 Бестиарий</button>
     <button class="tab-btn" data-tab="spells">✨ Заклинания</button>
+    <button class="tab-btn" data-tab="world">🗺️ Мир и старт</button>
+    <button class="tab-btn" data-tab="atmo">🎧 Атмосфера</button>
   </div>
 
   <!-- ==================== TAB: DICE ==================== -->
@@ -1360,6 +1371,28 @@ body.dark .add-btn { color: #0b0d12; }
     <div id="spellResults"></div>
   </div>
 
+  <div id="tab-world" class="tab-panel">
+    <div class="section-title">Быстрый старт</div>
+    <h2>Что такое D&D и как начать за 15 минут</h2>
+    <p>D&D — это кооперативная ролевая игра: ведущий описывает мир, а игроки решают, что делают герои.</p>
+    <div class="card"><strong>План первой сессии:</strong><p>1) Выбери класс и расу. 2) Определи мотивацию героя. 3) Собери стартовый инвентарь. 4) Пройди сцену знакомства и один бой.</p></div>
+    <h3>Интерактивная мини-карта</h3>
+    <div class="map-grid" id="mapGrid"></div>
+    <div class="map-legend" id="mapLegend">Исследовано: 0/25</div>
+  </div>
+
+  <div id="tab-atmo" class="tab-panel">
+    <div class="section-title">Фишка сайта</div>
+    <h2>Звуковая атмосфера</h2>
+    <p>Фоновые звуки для таверны, леса и боя.</p>
+    <div class="audio-row">
+      <button class="audio-btn" onclick="setAmbience('tavern', this)">🍺 Таверна</button>
+      <button class="audio-btn" onclick="setAmbience('forest', this)">🌲 Лес</button>
+      <button class="audio-btn" onclick="setAmbience('battle', this)">⚔️ Бой</button>
+      <button class="audio-btn" onclick="stopAmbience(this)">⏹ Стоп</button>
+    </div>
+  </div>
+
 </div><!-- .r -->
 
 <script>
@@ -1760,6 +1793,28 @@ async function loadSpell(index) {
     err.classList.add('visible');
   }
 }
+
+
+// ---- WORLD MAP ----
+const mapGrid = document.getElementById('mapGrid');
+if (mapGrid){
+  const key='dnd_map_cells';
+  let cells = JSON.parse(localStorage.getItem(key) || '[]');
+  for(let i=0;i<25;i++){
+    const c=document.createElement('button'); c.type='button'; c.className='map-cell';
+    c.textContent=['🏰','🌲','⛰️','🕳️','🛖'][i%5];
+    if(cells.includes(i)) c.classList.add('active');
+    c.onclick=()=>{ c.classList.toggle('active'); cells=[...mapGrid.children].map((el,idx)=>el.classList.contains('active')?idx:null).filter(v=>v!==null); localStorage.setItem(key, JSON.stringify(cells)); document.getElementById('mapLegend').textContent=`Исследовано: ${cells.length}/25`; };
+    mapGrid.appendChild(c);
+  }
+  document.getElementById('mapLegend').textContent=`Исследовано: ${cells.length}/25`;
+}
+
+// ---- AMBIENCE ----
+let ambienceAudio = null;
+const ambienceLinks = { tavern:'https://cdn.pixabay.com/audio/2022/03/15/audio_4a3c1df8de.mp3', forest:'https://cdn.pixabay.com/audio/2021/08/04/audio_c9a4a8de78.mp3', battle:'https://cdn.pixabay.com/audio/2022/01/20/audio_3c0be6dc98.mp3' };
+function setAmbience(kind, btn){ document.querySelectorAll('.audio-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); if(ambienceAudio) ambienceAudio.pause(); ambienceAudio = new Audio(ambienceLinks[kind]); ambienceAudio.loop = true; ambienceAudio.volume = 0.35; ambienceAudio.play().catch(()=>{}); }
+function stopAmbience(btn){ if(ambienceAudio){ ambienceAudio.pause(); ambienceAudio.currentTime = 0; } document.querySelectorAll('.audio-btn').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); }
 
 // ---- INIT API ----
 loadMonsterList().then(() => {
