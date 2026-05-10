@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D&D 5e Гримуар</title>
+<link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body data-theme="dark">
+
+<canvas id="magic-bg"></canvas>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>D&D 5e</h2>
+            <span>Гримуар</span>
+        </div>
+
+        <nav class="nav">
+
+            <button class="nav-btn active" data-page="home">
+                🏰 Главная
+            </button>
+
+            <button class="nav-btn" data-page="about">
+                📖 Что такое D&D
+            </button>
+
+            <button class="nav-btn" data-page="map">
+                🗺️ Карта мира
+            </button>
+
+            <button class="nav-btn" data-page="rules">
+                🎲 Основы правил
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button id="themeToggle">🌙 Тема</button>
+        </div>
+
+    </aside>
+
+    <main class="content">
+
+        <section class="page active" id="home">
+
+            <div class="hero">
+
+                <div class="hero-content">
+
+                    <h1>Dungeons & Dragons 2024</h1>
+
+                    <p>
+                        Создай героя. Исследуй мир.
+                        Брось кубики судьбы.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <button class="hero-btn">
+                            Начать приключение
+                        </button>
+
+                        <button class="hero-btn secondary">
+                            Создать персонажа
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="page" id="about">
+
+            <h2>Что такое D&D?</h2>
+
+            <div class="card-grid">
+
+                <div class="card">
+                    <h3>🎭 Игроки</h3>
+                    <p>
+                        Создают персонажей и принимают решения.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🧙 Dungeon Master</h3>
+                    <p>
+                        Управляет миром и рассказывает историю.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🎲 Кубики</h3>
+                    <p>
+                        Определяют успех или провал действий.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>📖 Приключение</h3>
+                    <p>
+                        Каждая игра — уникальная история.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="page" id="map">
+
+            <h2>Карта мира</h2>
+
+            <div class="map-container">
+
+                <div class="map-marker marker1">
+                    📍 Neverwinter
+                </div>
+
+                <div class="map-marker marker2">
+                    🏰 Baldur's Gate
+                </div>
+
+                <div class="map-marker marker3">
+                    🐉 Waterdeep
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="page" id="rules">
+
+            <h2>Основы правил</h2>
+
+            <div class="rules-grid">
+
+                <div class="rule-card">
+                    <h3>DC Проверка</h3>
+                    <p>d20 + бонус навыка ≥ DC</p>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Преимущество</h3>
+                    <p>Брось два d20 и выбери лучший результат.</p>
+                </div>
+
+                <div class="rule-card">
+                    <h3>Критический успех</h3>
+                    <p>Натуральная 20 — легендарный успех.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div class="audio-panel">
+    <button id="soundToggle">🔊 Атмосфера</button>
+
+    <audio id="bgAudio" loop>
+        <source src="assets/audio/tavern.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<script src="scripts/app.js"></script>
+
+</body>
+</html>
